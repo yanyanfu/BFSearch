@@ -60,7 +60,15 @@ def test_csr():
 
     print ("please enter the ID of root node")
     root=input()
+
+    start = datetime.datetime.now()
     G.run_bfs(int(root));
+    im = datetime.datetime.now()
+    G.run_bfs_multi_thread(int(root));
+    end = datetime.datetime.now()
+
+    print("time needed for bottom-up BFS", im-start)
+    print("time needed for multi-threads bottom-up BFS", end-im)
 
 def test_lanl_graph_python():
     

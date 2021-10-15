@@ -13,6 +13,7 @@ using std::endl;
 //#include "generated_pybind.h"
 
 void run_bfs(graph_t& graph, vid_t root);
+void run_bfs_multi_thread(graph_t& graph, vid_t root);
 
 PYBIND11_MODULE(kernel, m) {
 
@@ -23,6 +24,11 @@ PYBIND11_MODULE(kernel, m) {
     .def("get_edge_count", &graph_t::get_edge_count)
     
     .def("run_bfs",
+        [](graph_t& graph, vid_t root) {
+            run_bfs(graph, root);
+        }
+    )
+    .def("run_bfs_multi_thread",
         [](graph_t& graph, vid_t root) {
             run_bfs(graph, root);
         }
