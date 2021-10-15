@@ -1,9 +1,10 @@
-import queue
+from collections import deque
 import numpy as np
 import collections
 import pygraph as pg
 import kernel
 import datetime
+import queue
 
 def memoryview_to_np(memview, nebr_dt):
     arr = np.array(memview, copy=False)
@@ -67,8 +68,37 @@ def test_csr():
     G.run_bfs_multi_thread(int(root));
     end = datetime.datetime.now()
 
-    print("time needed for bottom-up BFS", im-start)
-    print("time needed for multi-threads bottom-up BFS", end-im)
+    print("time needed for bottom-up BFS using C++", im-start)
+    print("time needed for multi-threads bottom-up BFS using C++", end-im)
+
+    #top-down python implementation
+    start1 = datetime.datetime.now()
+
+    frontier=deque()
+    next_frontier=deque()
+    frontier.append(root)
+    visited=[]
+    level=0
+
+    while frontier:
+      v=frontier.pop()
+      nebr=nebrs_csr[int(offset_csr[int(v)][0]):int(offset_csr[int(v)+1][0])]
+
+      for i in range(len(nebr)):
+        if nebr[i][0] not in visited and nebr[i][0] not in next_frontier:
+          next_frontier.append(nebr[i][0])
+          visited.append(nebr[i][0])
+
+      if not frontier:
+        if next_frontier:
+          level+=1
+          while next_frontier:
+            frontier=next_frontier.copy()
+            next_frontier.clear()
+
+    end1 = datetime.datetime.now()
+    print("time needed for top-down BFS using python", end1-start1)
+
 
 def test_lanl_graph_python():
     
